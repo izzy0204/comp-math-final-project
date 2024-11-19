@@ -3,7 +3,7 @@ import math
 import sys
 
 pygame.init()
-huh
+
 # screen settings
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
