@@ -40,9 +40,9 @@ def calculate_forces():
 
     acceleration = F_net / mass
 
-    # update speed along incline based on acceleration
-    speed_x += acceleration * math.cos(angle_rad) * 0.1
-    speed_y += acceleration * math.sin(angle_rad) * 0.1
+    # speed along incline based on acceleration
+    speed_x += acceleration * math.cos(angle_rad)
+    speed_y += acceleration * math.sin(angle_rad)
 
     return F_parallel, F_perpendicular
 
