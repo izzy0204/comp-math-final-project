@@ -15,7 +15,10 @@ GRID_COLS = 20
 GRID_ROWS = 16
 
 # colors
-
+WHITE = (255, 255, 255)  # background
+PINK = (255, 192, 203)   # incline line
+BLUE = (0, 0, 255)       # object
+PURPLE = (128, 0, 128)   # text
 
 # convert angle to radians
 angle_rad = math.radians(angle)
