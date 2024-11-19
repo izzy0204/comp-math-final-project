@@ -19,6 +19,22 @@ WHITE = (255, 255, 255)  # background
 PINK = (255, 192, 203)   # incline line
 BLUE = (0, 0, 255)       # object
 PURPLE = (128, 0, 128)   # text
+BLACK = (0, 0, 0)        # input screen text
+
+# default simulation parameters
+mass = 10
+angle = 60
+g = 9.8
+friction_coefficient = 0.1
+
+# initial position
+x, y = 200, 300
+
+# input handling
+input_active = True
+input_prompts = ["Enter mass (kg): ", "Enter angle (degrees): ", "Enter gravitational acceleration (m/s²): ", "Enter friction coefficient: "]
+input_values = ["", "", "", ""]
+input_index = 0
 
 # convert angle to radians
 angle_rad = math.radians(angle)
