@@ -9,6 +9,11 @@ WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Incline Force Simulator")
 
+# grid setup
+GRID_SIZE = 32
+GRID_COLS = 20
+GRID_ROWS = 16
+
 # colors
 
 
