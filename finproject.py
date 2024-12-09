@@ -83,6 +83,12 @@ class Simulator:
         self.position_x = self.incline_start[0] + self.slope_x * self.progress
         self.position_y = self.incline_start[1] + self.slope_y * self.progress
 
+def draw_grid():
+    spacing = 20  # Distance between grid lines
+    for x in range(0, WIDTH, spacing):
+        pygame.draw.line(screen, GRAY, (x, 0), (x, HEIGHT), 1)
+    for y in range(0, HEIGHT, spacing):
+        pygame.draw.line(screen, GRAY, (0, y), (WIDTH, y), 1)
 
 # Draw text on the screen
 def draw_text(text, x, y, font=FONT, color=BLACK):
@@ -110,6 +116,20 @@ def draw_buttons():
     draw_text("Reset", WIDTH - 125, 60, LARGE_FONT)
     draw_text("Pause" if not paused else "Play", WIDTH - 125, 120, LARGE_FONT)
 
+def draw_arrow(start, end, color, width=2):
+    pygame.draw.line(screen, color, start, end, width)
+    angle = math.atan2(end[1] - start[1], end[0] - start[0])
+    arrow_size = 8
+    arrow_angle = math.pi / 6
+    points = [
+        end,
+        (end[0] - arrow_size * math.cos(angle - arrow_angle),
+         end[1] - arrow_size * math.sin(angle - arrow_angle)),
+        (end[0] - arrow_size * math.cos(angle + arrow_angle),
+         end[1] - arrow_size * math.sin(angle + arrow_angle))
+    ]
+    pygame.draw.polygon(screen, color, points)
+
 
 # Initialize simulator and buttons
 simulator = Simulator()
@@ -133,7 +153,10 @@ def main():
 
     while running:
         screen.fill(WHITE)
+        draw_grid()
         pygame.draw.line(screen, GRAY, simulator.incline_start, simulator.incline_end, 5)
+        lowest_point = simulator.incline_end
+        pygame.draw.line(screen, BLACK, lowest_point, (lowest_point[0] + 500, lowest_point[1]), 2)
 
         pygame.draw.rect(
             screen,
@@ -149,10 +172,10 @@ def main():
         normal_force, friction_force, parallel_force, _ = simulator.calculate_forces()
         scale = simulator.incline_length / 100
 
-        pygame.draw.line(screen, BLUE, (simulator.position_x, simulator.position_y),
-                         (simulator.position_x, simulator.position_y + normal_force * scale), 2)
-        pygame.draw.line(screen, GREEN, (simulator.position_x, simulator.position_y),
-                         (simulator.position_x - parallel_force * scale, simulator.position_y), 2)
+        draw_arrow((simulator.position_x, simulator.position_y),
+                   (simulator.position_x, simulator.position_y + normal_force * scale), BLUE)
+        draw_arrow((simulator.position_x, simulator.position_y),
+                   (simulator.position_x - parallel_force * scale, simulator.position_y), GREEN)
 
         draw_text(f"Normal: {normal_force:.2f} N", 10, HEIGHT - 200)
         draw_text(f"Friction: {friction_force:.2f} N", 10, HEIGHT - 170)
