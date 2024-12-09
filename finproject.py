@@ -18,8 +18,8 @@ GREEN = (0, 255, 0)
 GRAY = (200, 200, 200)
 
 # Fonts
-FONT = pygame.font.Font(None, 28)
-LARGE_FONT = pygame.font.Font(None, 36)
+FONT = pygame.font.Font('monofonto rg.otf', 18)
+LARGE_FONT = pygame.font.Font('monofonto rg.otf', 28)
 
 # Gravity constant (m/s²)
 g = 9.8
