@@ -145,6 +145,16 @@ buttons = {
     "pause": pygame.Rect(WIDTH - 140, 110, 100, 40),
 }
 
+# Draw updated text and angle display
+def draw_text(text, x, y, font=FONT, color=BLACK):
+    surface = font.render(text, True, color)
+    screen.blit(surface, (x, y))
+
+# Draw angle at the bottom of the incline
+def draw_angle_display(simulator):
+    angle_x = simulator.incline_end[0] + 40
+    angle_y = simulator.incline_end[1] - 30
+    draw_text(f"{simulator.angle}°", angle_x, angle_y, FONT, BLACK)
 
 def main():
     global paused
@@ -169,7 +179,7 @@ def main():
             )
         )
 
-        normal_force, friction_force, parallel_force, _ = simulator.calculate_forces()
+        normal_force, friction_force, parallel_force, acceleration = simulator.calculate_forces()
         scale = simulator.incline_length / 100
 
         draw_arrow((simulator.position_x, simulator.position_y),
@@ -177,9 +187,17 @@ def main():
         draw_arrow((simulator.position_x, simulator.position_y),
                    (simulator.position_x - parallel_force * scale, simulator.position_y), GREEN)
 
+        # Draw force information
         draw_text(f"Normal: {normal_force:.2f} N", 10, HEIGHT - 200)
         draw_text(f"Friction: {friction_force:.2f} N", 10, HEIGHT - 170)
         draw_text(f"Parallel: {parallel_force:.2f} N", 10, HEIGHT - 140)
+
+        # Draw speed and acceleration
+        draw_text(f"Speed: {simulator.velocity:.2f} m/s", 10, HEIGHT - 110)
+        draw_text(f"Acceleration: {acceleration:.2f} m/s²", 10, HEIGHT - 80)
+
+        # Draw angle display at the bottom of the incline
+        draw_angle_display(simulator)
 
         if not paused:
             simulator.update_position()
@@ -215,7 +233,6 @@ def main():
 
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()
