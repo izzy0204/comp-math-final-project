@@ -25,19 +25,39 @@ g = 9.8
 paused = False
 
 
-# Incline and object properties
 class Simulator:
+    """
+    A class to simulate the motion of an object on an inclined plane considering gravity,
+    friction, and other forces.
+
+    Attributes:
+        mass (float): The mass of the object (in kg).
+        angle (float): The angle of the incline (in degrees).
+        friction (float): The coefficient of friction between the object and the incline.
+        incline_start (tuple): The starting point of the incline on the screen (x, y).
+        incline_end (tuple): The end point of the incline on the screen (x, y).
+        progress (float): The progress of the object on the incline, ranging from 0.0 (top) to 1.0 (bottom).
+        velocity (float): The velocity of the object.
+        position_x (float): The current x-coordinate of the object on the incline.
+        position_y (float): The current y-coordinate of the object on the incline.
+        incline_length (float): The length of the incline.
+        slope_x (float): The horizontal distance between the start and end points of the incline.
+        slope_y (float): The vertical distance between the start and end points of the incline.
+    """
     def __init__(self):
-        self.mass = 10.0  # kg
-        self.angle = 30  # degrees
-        self.friction = 0.2  # friction coefficient
+        """
+        Initializes the simulator with default properties (mass, angle, friction) and sets up
+        the parameters of the incline and object position.
+        """
+        self.mass = 10.0
+        self.angle = 30
+        self.friction = 0.2
 
         self.incline_start = (WIDTH - 100, 100)
         self.incline_end = (200, HEIGHT - 100)
 
-        self.progress = 0.0  # From 0.0 (top) to 1.0 (bottom)
+        self.progress = 0.0
 
-        # Calculate slope parameters
         self.slope_x = self.incline_end[0] - self.incline_start[0]
         self.slope_y = self.incline_end[1] - self.incline_start[1]
         self.incline_length = math.sqrt(self.slope_x ** 2 + self.slope_y ** 2)
@@ -45,12 +65,23 @@ class Simulator:
         self.reset_simulation()
 
     def reset_simulation(self):
-        self.velocity = 0  # Initial velocity
-        self.progress = 0.0  # Reset to top of incline
+        """
+        Resets the simulation, setting the object back to the top of the incline with an initial 
+        velocity of zero.
+        """
+        self.velocity = 0
+        self.progress = 0.0
         self.position_x = self.incline_start[0]
         self.position_y = self.incline_start[1]
 
     def calculate_forces(self):
+        """
+        Calculates the forces acting on the object: normal force, parallel force, frictional force,
+        and the net acceleration.
+
+        Returns:
+            tuple: A tuple containing the normal force, friction force, parallel force, and acceleration.
+        """
         angle_rad = math.radians(self.angle)
         weight = self.mass * g
 
@@ -64,6 +95,11 @@ class Simulator:
         return normal_force, friction_force, parallel_force, acceleration
 
     def update_position(self):
+        """
+        Updates the object's position on the incline based on its velocity and acceleration.
+
+        If the object reaches the bottom of the incline (progress >= 1.0), it stops moving.
+        """
         if self.progress >= 1.0:
             self.velocity = 0
             return
@@ -79,6 +115,11 @@ class Simulator:
         self.position_y = self.incline_start[1] + self.slope_y * self.progress
 
 def draw_grid():
+    """
+    Draws a grid overlay on the screen to aid visualization of the simulation.
+    
+    The grid is spaced at 20 pixels intervals and is rendered in a light gray color.
+    """
     spacing = 20 
     for x in range(0, WIDTH, spacing):
         pygame.draw.line(screen, GRAY, (x, 0), (x, HEIGHT), 1)
@@ -86,11 +127,27 @@ def draw_grid():
         pygame.draw.line(screen, GRAY, (0, y), (WIDTH, y), 1)
 
 def draw_text(text, x, y, font=FONT, color=BLACK):
+    """
+    Renders text on the screen at the specified coordinates.
+
+    Args:
+        text (str): The text to display.
+        x (int): X-coordinate for the text position.
+        y (int): Y-coordinate for the text position.
+        font (pygame.font.Font): The font to use for rendering the text.
+        color (tuple): RGB color tuple for the text.
+    """
     surface = font.render(text, True, color)
     screen.blit(surface, (x, y))
 
 
 def draw_buttons():
+    """
+    Draws interactive buttons on the screen for controlling the simulation.
+
+    The buttons include options to adjust mass, angle, friction, reset the simulation,
+    and toggle the pause state. Labels are displayed alongside the buttons.
+    """
     pygame.draw.rect(screen, GRAY, buttons["mass_up"])
     pygame.draw.rect(screen, GRAY, buttons["mass_down"])
     pygame.draw.rect(screen, GRAY, buttons["angle_up"])
@@ -110,6 +167,15 @@ def draw_buttons():
     draw_text("Pause" if not paused else "Play", WIDTH - 125, 120, LARGE_FONT)
 
 def draw_arrow(start, end, color, width=2):
+    """
+    Draws an arrow on the screen between two points.
+
+    Args:
+        start (tuple): Coordinates of the arrow's starting point (x, y).
+        end (tuple): Coordinates of the arrow's end point (x, y).
+        color (tuple): RGB color tuple for the arrow.
+        width (int): Line width for the arrow shaft.
+    """
     pygame.draw.line(screen, color, start, end, width)
     angle = math.atan2(end[1] - start[1], end[0] - start[0])
     arrow_size = 8
@@ -124,7 +190,6 @@ def draw_arrow(start, end, color, width=2):
     pygame.draw.polygon(screen, color, points)
 
 
-# Initialize simulator and buttons
 simulator = Simulator()
 
 buttons = {
@@ -139,6 +204,12 @@ buttons = {
 }
 
 def draw_angle_display(simulator):
+    """
+    Displays the incline angle near the lower end of the slope.
+
+    Args:
+        simulator (Simulator): The current simulator instance containing the angle value.
+    """
     angle_x = simulator.incline_end[0] + 40
     angle_y = simulator.incline_end[1] - 30
     draw_text(f"{simulator.angle}°", angle_x, angle_y, FONT, BLACK)
