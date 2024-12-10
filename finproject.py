@@ -138,10 +138,6 @@ buttons = {
     "pause": pygame.Rect(WIDTH - 140, 110, 100, 40),
 }
 
-def draw_text(text, x, y, font=FONT, color=BLACK):
-    surface = font.render(text, True, color)
-    screen.blit(surface, (x, y))
-
 def draw_angle_display(simulator):
     angle_x = simulator.incline_end[0] + 40
     angle_y = simulator.incline_end[1] - 30
