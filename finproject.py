@@ -4,12 +4,10 @@ import sys
 
 pygame.init()
 
-# Screen settings
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Incline Force Simulator")
 
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -17,8 +15,7 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 GRAY = (200, 200, 200)
 
-# Fonts
-FONT = pygame.font.Font('monofonto rg.otf', 18)
+FONT = pygame.font.Font('monofonto rg.otf', 18) # Open source free font from dafont.com
 LARGE_FONT = pygame.font.Font('monofonto rg.otf', 28)
 
 # Gravity constant (m/s²)
@@ -31,15 +28,13 @@ paused = False
 # Incline and object properties
 class Simulator:
     def __init__(self):
-        self.mass = 10.0  # Mass in kg
-        self.angle = 30  # Incline angle in degrees
-        self.friction = 0.2  # Coefficient of friction
+        self.mass = 10.0  # kg
+        self.angle = 30  # degrees
+        self.friction = 0.2  # friction coefficient
 
-        # Incline line coordinates
         self.incline_start = (WIDTH - 100, 100)
         self.incline_end = (200, HEIGHT - 100)
 
-        # Sliding progress tracking
         self.progress = 0.0  # From 0.0 (top) to 1.0 (bottom)
 
         # Calculate slope parameters
@@ -84,19 +79,17 @@ class Simulator:
         self.position_y = self.incline_start[1] + self.slope_y * self.progress
 
 def draw_grid():
-    spacing = 20  # Distance between grid lines
+    spacing = 20 
     for x in range(0, WIDTH, spacing):
         pygame.draw.line(screen, GRAY, (x, 0), (x, HEIGHT), 1)
     for y in range(0, HEIGHT, spacing):
         pygame.draw.line(screen, GRAY, (0, y), (WIDTH, y), 1)
 
-# Draw text on the screen
 def draw_text(text, x, y, font=FONT, color=BLACK):
     surface = font.render(text, True, color)
     screen.blit(surface, (x, y))
 
 
-# Draw buttons for user interaction
 def draw_buttons():
     pygame.draw.rect(screen, GRAY, buttons["mass_up"])
     pygame.draw.rect(screen, GRAY, buttons["mass_down"])
@@ -145,12 +138,10 @@ buttons = {
     "pause": pygame.Rect(WIDTH - 140, 110, 100, 40),
 }
 
-# Draw updated text and angle display
 def draw_text(text, x, y, font=FONT, color=BLACK):
     surface = font.render(text, True, color)
     screen.blit(surface, (x, y))
 
-# Draw angle at the bottom of the incline
 def draw_angle_display(simulator):
     angle_x = simulator.incline_end[0] + 40
     angle_y = simulator.incline_end[1] - 30
@@ -187,16 +178,13 @@ def main():
         draw_arrow((simulator.position_x, simulator.position_y),
                    (simulator.position_x - parallel_force * scale, simulator.position_y), GREEN)
 
-        # Draw force information
         draw_text(f"Normal: {normal_force:.2f} N", 10, HEIGHT - 200)
         draw_text(f"Friction: {friction_force:.2f} N", 10, HEIGHT - 170)
         draw_text(f"Parallel: {parallel_force:.2f} N", 10, HEIGHT - 140)
 
-        # Draw speed and acceleration
         draw_text(f"Speed: {simulator.velocity:.2f} m/s", 10, HEIGHT - 110)
         draw_text(f"Acceleration: {acceleration:.2f} m/s²", 10, HEIGHT - 80)
 
-        # Draw angle display at the bottom of the incline
         draw_angle_display(simulator)
 
         if not paused:
